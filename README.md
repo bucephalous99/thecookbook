@@ -1,2 +1,2 @@
 # thecookbook
-its a pubblic learning proyect - 
+A Public Learning way
