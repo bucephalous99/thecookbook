@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'The CookBook',
-  description: 'A minimal Next.js application',
+  title: 'TheCookBook - DevOps Platform',
+  description: 'Tu plataforma de DevOps, Cloud y Automatización',
+  viewport: 'width=device-width, initial-scale=1',
 }
 
 export default function RootLayout({
@@ -13,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="flex flex-col min-h-screen">{children}</body>
+      <body>{children}</body>
     </html>
   )
 }
