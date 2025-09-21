@@ -1,21 +1,14 @@
-import React from 'react'
+'use client'
+
+import React, { useId } from 'react'
 import { clsx } from 'clsx'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
-  error?: string
-  helperText?: string
 }
 
-export default function Input({
-  label,
-  error,
-  helperText,
-  className,
-  id,
-  ...props
-}: InputProps) {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
+export default function Input({ label, className, ...props }: InputProps) {
+  const inputId = useId() // useId de React garantiza consistencia servidor/cliente
 
   return (
     <div className="w-full">
@@ -30,20 +23,11 @@ export default function Input({
       <input
         id={inputId}
         className={clsx(
-          'w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm',
-          'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-          'disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200',
-          error && 'border-red-300 focus:ring-red-500',
+          "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           className
         )}
         {...props}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
-      )}
-      {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
-      )}
     </div>
   )
 }
