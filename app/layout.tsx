@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
+import { SearchProvider } from './context/SearchContext'
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'The CookBook',
-  description: 'A minimal Next.js application',
+  description: 'Tu biblioteca de código y recursos DevOps',
 }
 
 export default function RootLayout({
@@ -13,7 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <SearchProvider>
+          {children}
+        </SearchProvider>
+      </body>
     </html>
   )
 }
