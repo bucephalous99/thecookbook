@@ -48,12 +48,16 @@ export default function SnippetsPage() {
                   </span>
                 ) : (
                   <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg">
-                    Todos los Snippets
+                    Recursos Gratuitos
                   </span>
                 )}
               </h1>
               
-              <p className="text-gray-200 drop-shadow-md">
+              <p className="text-gray-200 drop-shadow-md mb-2">
+                Snippets de código y recursos para developers. Completamente gratis.
+              </p>
+              
+              <p className="text-gray-300 drop-shadow-md text-sm">
                 {displaySnippets.length} snippet{displaySnippets.length !== 1 ? 's' : ''} 
                 {isSearching ? ' encontrado' : ' disponible'}{displaySnippets.length !== 1 ? 's' : ''}
               </p>
