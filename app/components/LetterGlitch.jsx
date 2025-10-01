@@ -2,6 +2,19 @@
 
 import { useRef, useEffect, useCallback } from 'react';
 
+const INSPIRATIONAL_MESSAGES = [
+  "SIGUE ADELANTE",
+  "TU ESFUERZO VALE",
+  "JUNTOS SOMOS MÁS",
+  "CREE EN TI",
+  "PERSISTE",
+  "INNOVAR ES CRECER",
+  "CONSTRUYE TU SUEÑO",
+  "COMUNIDAD",
+  "EMPRENDIMIENTO",
+  "SOLIDARIDAD"
+];
+
 const LetterGlitch = ({
   glitchColors = [
     'rgba(244, 63, 94, 0.15)',   // Rose primario
@@ -29,6 +42,7 @@ const LetterGlitch = ({
   const context = useRef(null);
   const lastGlitchTime = useRef(Date.now());
   const performanceRef = useRef({ frameCount: 0, lastFpsCheck: Date.now() });
+  const messageTimerRef = useRef(null);
 
   const lettersAndSymbols = Array.from(characters);
 
@@ -90,18 +104,14 @@ const LetterGlitch = ({
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    const parent = canvas.parentElement;
-    if (!parent) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const rect = parent.getBoundingClientRect();
-    const config = getResponsiveConfig();
 
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
+    // Forzar dimensiones de viewport completo
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
 
     if (context.current) {
       context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -109,9 +119,72 @@ const LetterGlitch = ({
       context.current.textRenderingOptimization = 'optimizeSpeed';
     }
 
-    const { columns, rows } = calculateGrid(rect.width, rect.height, config);
+    const config = getResponsiveConfig();
+    const { columns, rows } = calculateGrid(window.innerWidth, window.innerHeight, config);
     initializeLetters(columns, rows);
   }, [getResponsiveConfig, calculateGrid, initializeLetters]);
+
+  const showMessage = useCallback(() => {
+    if (!letters.current?.length) return;
+
+    const message = INSPIRATIONAL_MESSAGES[Math.floor(Math.random() * INSPIRATIONAL_MESSAGES.length)];
+    const config = getResponsiveConfig();
+    const { columns, rows } = grid.current;
+
+    // Posición aleatoria donde iniciar el mensaje
+    const startRow = Math.floor(Math.random() * (rows - 3)) + 1;
+    const startCol = Math.floor(Math.random() * (columns - message.length - 2));
+
+    // Color único para el mensaje (más brillante)
+    const messageColors = [
+      'rgba(244, 63, 94, 0.9)',   // Rose brillante
+      'rgba(168, 85, 247, 0.9)',  // Purple brillante
+      'rgba(59, 130, 246, 0.9)',  // Blue brillante
+      'rgba(16, 185, 129, 0.9)',  // Emerald brillante
+      'rgba(251, 191, 36, 0.9)',  // Amber brillante
+    ];
+    const messageColor = messageColors[Math.floor(Math.random() * messageColors.length)];
+
+    // Insertar cada letra del mensaje en el grid
+    for (let i = 0; i < message.length; i++) {
+      const col = startCol + i;
+      if (col >= columns) break;
+
+      const index = startRow * columns + col;
+      if (index >= letters.current.length) break;
+
+      // Reemplazar el carácter aleatorio con la letra del mensaje
+      letters.current[index] = {
+        char: message[i],
+        color: messageColor,
+        targetColor: messageColor,
+        colorProgress: 1,
+        lastUpdate: Date.now() + 4000, // Mantener por 4 segundos
+        updateInterval: 12000, // No cambiar pronto
+        isActive: true,
+        fadePhase: 0,
+        isMessage: true // Marcar como parte del mensaje
+      };
+    }
+
+    // Después de 4 segundos, desvanecer el mensaje
+    setTimeout(() => {
+      for (let i = 0; i < message.length; i++) {
+        const col = startCol + i;
+        if (col >= columns) break;
+
+        const index = startRow * columns + col;
+        if (index >= letters.current.length) break;
+
+        // Volver a carácter aleatorio
+        if (letters.current[index]) {
+          letters.current[index].isMessage = false;
+          letters.current[index].char = getRandomChar();
+          letters.current[index].updateInterval = 1000 + Math.random() * 4000;
+        }
+      }
+    }, 4000);
+  }, [getRandomChar, getResponsiveConfig]);
 
   const drawLetters = useCallback(() => {
     if (!context.current || letters.current.length === 0 || !canvasRef.current) return;
@@ -148,9 +221,21 @@ const LetterGlitch = ({
       
       // Aplicar color con fade
       const colorWithFade = letter.color.replace(/[\d.]+\)$/, `${parseFloat(letter.color.match(/[\d.]+\)$/)?.[0] || '1') * fadeIntensity})`);
-      
+
       ctx.fillStyle = colorWithFade;
+
+      // Resaltar mensajes inspiradores
+      if (letter.isMessage) {
+        ctx.shadowColor = letter.color;
+        ctx.shadowBlur = 8;
+      }
+
       ctx.fillText(letter.char, x + offsetX, y + offsetY);
+
+      // Limpiar shadow
+      if (letter.isMessage) {
+        ctx.shadowBlur = 0;
+      }
     });
 
     // Monitoreo de performance
@@ -161,7 +246,7 @@ const LetterGlitch = ({
         const fps = performanceRef.current.frameCount / 5;
         performanceRef.current.frameCount = 0;
         performanceRef.current.lastFpsCheck = now;
-        
+
         // Auto-ajuste de calidad si FPS es bajo
         if (fps < 30 && letters.current.length > 100) {
           letters.current = letters.current.filter((_, i) => i % 2 === 0);
@@ -255,47 +340,55 @@ const LetterGlitch = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    context.current = canvas.getContext('2d', { 
-      alpha: true, 
+    context.current = canvas.getContext('2d', {
+      alpha: true,
       desynchronized: true,
       powerPreference: 'high-performance'
     });
-    
+
     resizeCanvas();
     animate();
 
-    let resizeTimeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        cancelAnimationFrame(animationRef.current);
-        resizeCanvas();
-        animate();
-      }, 150);
+    // Usar ResizeObserver en lugar de window resize
+    const resizeObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(animationRef.current);
+      resizeCanvas();
+      animate();
+    });
+
+    resizeObserver.observe(document.body);
+
+    // Mostrar mensaje cada 6-10 segundos
+    const scheduleNextMessage = () => {
+      const delay = 6000 + Math.random() * 4000; // Cada 6-10 segundos
+      messageTimerRef.current = setTimeout(() => {
+        showMessage();
+        scheduleNextMessage();
+      }, delay);
     };
 
-    window.addEventListener('resize', handleResize);
+    scheduleNextMessage();
 
     return () => {
       cancelAnimationFrame(animationRef.current);
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
+      if (messageTimerRef.current) {
+        clearTimeout(messageTimerRef.current);
+      }
     };
-  }, [resizeCanvas, animate]);
+  }, [resizeCanvas, animate, showMessage]);
 
   // Estilos profesionales
   const containerStyle = {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%)',
     overflow: 'hidden',
+    background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%)',
   };
 
   const canvasStyle = {
     display: 'block',
-    width: '100%',
-    height: '100%',
-    mixBlendMode: 'screen', // Efecto blend profesional
+    width: '100vw',
+    height: '100vh',
+    mixBlendMode: 'screen',
   };
 
   const outerVignetteStyle = {
@@ -323,7 +416,7 @@ const LetterGlitch = ({
   };
 
   return (
-    <div style={containerStyle} className={className}>
+    <div className={`fixed inset-0 w-screen h-screen ${className}`} style={containerStyle}>
       <canvas ref={canvasRef} style={canvasStyle} />
       {outerVignette && <div style={outerVignetteStyle}></div>}
       {centerVignette && <div style={centerVignetteStyle}></div>}

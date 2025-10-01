@@ -1,22 +1,16 @@
 // components/ui/NeonGlow.jsx - VERSIÓN MEJORADA
 'use client';
-import { useState } from 'react';
+import { Z_INDEX } from '../../constants/zIndex';
 
-export default function NeonGlow() {
-  const [isActive, setIsActive] = useState(false);
-
+export default function NeonGlow({ isActive = false }) {
   return (
     <>
-      {/* Trigger invisible */}
-      <div 
-        className="fixed left-4 top-1/2 -translate-y-1/2 z-[100] w-12 h-12 cursor-pointer"
-        onMouseEnter={() => setIsActive(true)}
-        onMouseLeave={() => setIsActive(false)}
-      />
-
       {/* LÍNEA VERTICAL NEON (solo borde izquierdo) */}
       {isActive && (
-        <div className="fixed left-0 top-0 h-full w-1 z-[91]">
+        <div
+          className="fixed left-0 top-0 h-full w-1 pointer-events-none"
+          style={{ zIndex: Z_INDEX.NEON_EFFECT }}
+        >
           {/* Gradiente vertical */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-400 to-transparent opacity-60" />
           

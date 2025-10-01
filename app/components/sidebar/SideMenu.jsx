@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, Calendar, Code, Plus } from 'lucide-react';
+import { Z_INDEX } from '../../constants/zIndex';
 
 export default function SideMenu({ 
   isVisible, 
@@ -28,10 +29,11 @@ export default function SideMenu({
   ];
 
   return (
-    <div 
-      className={`fixed left-0 top-16 h-full z-20 transition-all duration-500 ${
+    <aside
+      className={`fixed left-0 top-16 h-full transition-all duration-500 ${
         isVisible ? 'translate-x-0' : '-translate-x-full'
       }`}
+      style={{ zIndex: Z_INDEX.SIDE_MENU }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -115,6 +117,6 @@ export default function SideMenu({
           Book a Call for Custom Deploy
         </button>
       </div>
-    </div>
+    </aside>
   );
 }
