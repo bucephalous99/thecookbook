@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Zap, Users, TrendingUp, Heart, Sparkles, Bot, MessageCircle, CheckCircle, Clock, Shield, AlertCircle, Gift, Baby, Coffee, Mail, Phone, User, Building, X, Target, Calendar, Calculator } from 'lucide-react';
 import LetterGlitch from './components/LetterGlitch';
 import Header from './components/Header';
+import TimeBasedHook from './components/ui/TimeBasedHook';
 
 export default function Home() {
   const [donationAmount, setDonationAmount] = useState(50);
@@ -65,76 +66,47 @@ export default function Home() {
         {/* HERO SECTION */}
         <section className="min-h-screen flex items-center justify-center px-4 pt-20">
           <div className="text-center max-w-5xl mx-auto">
-            
-            <div className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 bg-rose-500/20 backdrop-blur-xl border-2 border-rose-400/50 rounded-full shadow-2xl animate-pulse">
-              <AlertCircle className="w-5 h-5 text-rose-300" />
-              <span className="text-rose-200 font-bold tracking-wide">¿Cuánto tiempo perdiste esta semana en tareas repetitivas?</span>
+
+            <TimeBasedHook />
+
+            <div className="text-center mb-8">
+              <h1 className="text-5xl md:text-7xl font-bold mb-4">
+                <span className="line-through text-gray-500 block">
+                  Trabajar hasta tarde todos los días
+                </span>
+                <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+                  Recupera 25+ horas para tu familia
+                </span>
+              </h1>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                La IA te devuelve 25+ horas semanales para familia, salud y descanso real
+              </p>
             </div>
+            <button
+              onClick={() => {
+                setFormData({...formData, origen: 'hero-principal'});
+                setShowLeadForm(true);
+              }}
+              className="bg-gradient-to-r from-teal-500 to-rose-500 text-white font-bold py-4 px-8 rounded-lg text-xl hover:scale-105 transition-all duration-300 shadow-lg"
+            >
+              💝 Recuperar Mis 25 Horas
+            </button>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-  <span className="text-gray-400 line-through opacity-60 text-4xl md:text-6xl block mb-2">
-    Vivir en el trabajo
-  </span>
-  <span className="bg-gradient-to-r from-rose-300 via-pink-300 to-purple-300 bg-clip-text text-transparent">
-    o Disfrutar Tu Vida
-  </span>
-</h1>
-
-<div className="bg-white/8 backdrop-blur-xl border-2 border-purple-400/30 rounded-3xl p-8 mb-10 max-w-3xl mx-auto shadow-2xl">
-  <p className="text-2xl text-gray-100 mb-4 leading-relaxed">
-    Si sientes que <span className="text-rose-300 font-bold">el negocio te consume</span> y no tienes tiempo ni para dormir...
-  </p>
-  <p className="text-xl text-purple-200">
-    La IA no hace magia. <span className="text-amber-300 font-bold">Te devuelve 25+ horas semanales</span> para que recuperes tu vida: <span className="text-teal-300">familia, salud, tiempo libre.</span>
-  </p>
-</div>
-            <div className="grid md:grid-cols-3 gap-4 mb-10 max-w-3xl mx-auto text-left">
-              {[
-                { icon: Clock, label: 'Responder emails repetitivos', time: '8h/semana', color: 'hover:border-amber-400/60' },
-                { icon: MessageCircle, label: 'Agendar citas manualmente', time: '5h/semana', color: 'hover:border-teal-400/60' },
-                { icon: Target, label: 'Seguimiento de clientes', time: '12h/semana', color: 'hover:border-rose-400/60' }
-              ].map((item, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setFormData({...formData, origen: `calculadora-${item.label}`});
-                    setShowLeadForm(true);
-                  }}
-                  className={`bg-slate-900/60 backdrop-blur-sm border border-slate-600/50 rounded-xl p-4 transition-all hover:scale-105 cursor-pointer ${item.color} hover:shadow-lg text-left`}
-                >
-                  <item.icon className="w-6 h-6 text-amber-400 mb-2" />
-                  <p className="text-sm text-gray-300 mb-1">{item.label}</p>
-                  <p className="text-2xl font-bold text-rose-300">{item.time}</p>
-                </button>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <button 
-                onClick={() => {
-                  setFormData({...formData, origen: 'hero-principal'});
-                  setShowLeadForm(true);
-                }}
-                className="group bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-300 hover:to-pink-300 text-white font-bold px-10 py-5 rounded-2xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_60px_rgba(244,63,94,0.9)] inline-flex items-center gap-3 text-lg shadow-xl"
-              >
-                <Heart className="w-6 h-6 group-hover:scale-125 transition-transform animate-pulse" />
-                Quiero Recuperar Mi Tiempo
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </button>
-              
-              <Link
-                href="/agentes"
-                className="group bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 hover:scale-105 border-2 border-teal-400/40 hover:border-teal-300/60 inline-flex items-center gap-2 text-lg"
-              >
-                Ver Agentes Disponibles
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-
-            <div className="inline-flex items-center gap-3 px-5 py-3 bg-purple-400/10 border border-purple-300/20 rounded-full backdrop-blur-sm">
-              <Shield className="w-5 h-5 text-purple-300" />
-              <p className="text-sm text-purple-200">
-                🇵🇦 Panamá · <span className="text-teal-300 font-bold">7 días de implementación</span> · Soporte 24/7
+            {/* Prueba social */}
+            <div className="flex items-center justify-center space-x-2 mt-6">
+              <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                  M
+                </div>
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-teal-500 flex items-center justify-center text-white text-sm font-bold">
+                  A
+                </div>
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center text-white text-sm font-bold">
+                  S
+                </div>
+              </div>
+              <p className="text-sm text-gray-400">
+                47 emprendedoras recuperaron su tiempo este mes
               </p>
             </div>
           </div>
