@@ -101,6 +101,26 @@ const LetterGlitch = ({
     }));
   }, [getRandomChar, getRandomColor]);
 
+  // Throttle helper function
+  const throttle = (func, delay) => {
+    let timeoutId;
+    let lastRan;
+    return function(...args) {
+      if (!lastRan) {
+        func.apply(this, args);
+        lastRan = Date.now();
+      } else {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          if (Date.now() - lastRan >= delay) {
+            func.apply(this, args);
+            lastRan = Date.now();
+          }
+        }, delay - (Date.now() - lastRan));
+      }
+    };
+  };
+
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -123,6 +143,10 @@ const LetterGlitch = ({
     const { columns, rows } = calculateGrid(window.innerWidth, window.innerHeight, config);
     initializeLetters(columns, rows);
   }, [getResponsiveConfig, calculateGrid, initializeLetters]);
+
+  const throttledResize = useCallback(throttle(() => {
+    resizeCanvas();
+  }, 100), [resizeCanvas]);
 
   const showMessage = useCallback(() => {
     if (!letters.current?.length) return;
@@ -188,55 +212,67 @@ const LetterGlitch = ({
 
   const drawLetters = useCallback(() => {
     if (!context.current || letters.current.length === 0 || !canvasRef.current) return;
-    
+
     const ctx = context.current;
     const { width, height } = canvasRef.current.getBoundingClientRect();
     const config = getResponsiveConfig();
-    
-    // Limpiar canvas
+
+    // Limpiar canvas de forma optimizada
     ctx.clearRect(0, 0, width, height);
-    
-    // Configurar fuente optimizada
+
+    // Configurar fuente optimizada (solo una vez)
     ctx.font = `${config.fontSize}px "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Consolas", monospace`;
     ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
 
     const time = Date.now() * 0.001; // Para animaciones basadas en tiempo
 
+    // Optimización: agrupar operaciones de dibujo
+    let lastColor = '';
+    let hasShadow = false;
+
     letters.current.forEach((letter, index) => {
       if (!letter.isActive) return;
 
       const col = index % grid.current.columns;
       const row = Math.floor(index / grid.current.columns);
-      
+
       const x = col * config.charWidth;
       const y = row * config.charHeight;
-      
-      // Efecto de fade sutil basado en fase
-      const fadeIntensity = (Math.sin(time + letter.fadePhase) * 0.1) + 0.9;
-      
-      // Micro-desplazamiento para efecto orgánico
-      const offsetX = Math.sin(time * 2 + index * 0.1) * 0.3;
-      const offsetY = Math.cos(time * 1.5 + index * 0.15) * 0.2;
-      
+
+      // Efecto de fade sutil basado en fase (reducido para performance)
+      const fadeIntensity = (Math.sin(time + letter.fadePhase) * 0.08) + 0.92;
+
+      // Micro-desplazamiento para efecto orgánico (reducido)
+      const offsetX = Math.sin(time * 2 + index * 0.1) * 0.2;
+      const offsetY = Math.cos(time * 1.5 + index * 0.15) * 0.15;
+
       // Aplicar color con fade
       const colorWithFade = letter.color.replace(/[\d.]+\)$/, `${parseFloat(letter.color.match(/[\d.]+\)$/)?.[0] || '1') * fadeIntensity})`);
 
-      ctx.fillStyle = colorWithFade;
+      // Optimización: solo cambiar fillStyle si el color cambió
+      if (colorWithFade !== lastColor) {
+        ctx.fillStyle = colorWithFade;
+        lastColor = colorWithFade;
+      }
 
       // Resaltar mensajes inspiradores
-      if (letter.isMessage) {
+      if (letter.isMessage && !hasShadow) {
         ctx.shadowColor = letter.color;
         ctx.shadowBlur = 8;
+        hasShadow = true;
+      } else if (!letter.isMessage && hasShadow) {
+        ctx.shadowBlur = 0;
+        hasShadow = false;
       }
 
       ctx.fillText(letter.char, x + offsetX, y + offsetY);
-
-      // Limpiar shadow
-      if (letter.isMessage) {
-        ctx.shadowBlur = 0;
-      }
     });
+
+    // Limpiar shadow final si quedó activo
+    if (hasShadow) {
+      ctx.shadowBlur = 0;
+    }
 
     // Monitoreo de performance
     if (enablePerformanceMode) {
@@ -248,8 +284,13 @@ const LetterGlitch = ({
         performanceRef.current.lastFpsCheck = now;
 
         // Auto-ajuste de calidad si FPS es bajo
-        if (fps < 30 && letters.current.length > 100) {
-          letters.current = letters.current.filter((_, i) => i % 2 === 0);
+        if (fps < 25 && letters.current.length > 150) {
+          // Reducir densidad de letras activas en lugar de eliminarlas
+          letters.current.forEach((letter, i) => {
+            if (i % 3 === 0 && !letter.isMessage) {
+              letter.isActive = false;
+            }
+          });
         }
       }
     }
@@ -257,23 +298,29 @@ const LetterGlitch = ({
 
   const updateLetters = useCallback(() => {
     if (!letters.current?.length) return;
-    
+
     const now = Date.now();
-    
-    letters.current.forEach((letter, index) => {
+
+    // Optimización: actualizar solo un subset de letras por frame
+    const batchSize = Math.ceil(letters.current.length / 10); // 10% por frame
+    const startIndex = (now % letters.current.length) % (letters.current.length - batchSize);
+
+    for (let i = startIndex; i < startIndex + batchSize && i < letters.current.length; i++) {
+      const letter = letters.current[i];
+
       // Actualización basada en intervalo individual
       if (now - letter.lastUpdate > letter.updateInterval) {
-        // Chance de activar/desactivar letras
-        if (Math.random() < 0.05) {
+        // Chance de activar/desactivar letras (reducida para mejor performance)
+        if (Math.random() < 0.03) {
           letter.isActive = !letter.isActive;
         }
-        
-        if (letter.isActive) {
+
+        if (letter.isActive && !letter.isMessage) {
           letter.char = getRandomChar();
           letter.targetColor = getRandomColor();
           letter.lastUpdate = now;
-          letter.updateInterval = 1000 + Math.random() * 4000;
-          
+          letter.updateInterval = 1500 + Math.random() * 4000; // Intervalos más largos
+
           if (!smooth) {
             letter.color = letter.targetColor;
             letter.colorProgress = 1;
@@ -282,7 +329,7 @@ const LetterGlitch = ({
           }
         }
       }
-    });
+    }
   }, [getRandomChar, getRandomColor, smooth]);
 
   const handleSmoothTransitions = useCallback(() => {
@@ -349,18 +396,21 @@ const LetterGlitch = ({
     resizeCanvas();
     animate();
 
-    // Usar ResizeObserver en lugar de window resize
+    // Usar ResizeObserver con throttle
     const resizeObserver = new ResizeObserver(() => {
-      cancelAnimationFrame(animationRef.current);
-      resizeCanvas();
-      animate();
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      throttledResize();
+      // Reiniciar animación después del resize
+      setTimeout(() => animate(), 150);
     });
 
     resizeObserver.observe(document.body);
 
-    // Mostrar mensaje cada 6-10 segundos
+    // Mostrar mensaje cada 10-15 segundos
     const scheduleNextMessage = () => {
-      const delay = 6000 + Math.random() * 4000; // Cada 6-10 segundos
+      const delay = 10000 + Math.random() * 5000; // Cada 10-15 segundos
       messageTimerRef.current = setTimeout(() => {
         showMessage();
         scheduleNextMessage();
@@ -370,11 +420,30 @@ const LetterGlitch = ({
     scheduleNextMessage();
 
     return () => {
-      cancelAnimationFrame(animationRef.current);
+      // Cancelar animación
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+
+      // Desconectar observer
       resizeObserver.disconnect();
+
+      // Limpiar timer de mensajes
       if (messageTimerRef.current) {
         clearTimeout(messageTimerRef.current);
+        messageTimerRef.current = null;
       }
+
+      // Limpiar canvas
+      if (context.current && canvasRef.current) {
+        context.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        context.current = null;
+      }
+
+      // Limpiar referencias
+      letters.current = [];
+      grid.current = { columns: 0, rows: 0 };
     };
   }, [resizeCanvas, animate, showMessage]);
 
