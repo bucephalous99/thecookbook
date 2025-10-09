@@ -7,28 +7,28 @@ export default function ImpactCounter() {
     {
       icon: Users,
       label: "Mujeres emprendedoras",
-      value: 47,
+      value: 30,
       suffix: "+",
       color: "text-pink-400"
     },
     {
       icon: Briefcase,
       label: "PyMEs asesoradas",
-      value: 23,
+      value: 22,
       suffix: "+",
       color: "text-green-400"
     },
     {
       icon: TrendingUp,
       label: "Horas ahorradas/mes",
-      value: 1240,
+      value: +1240,
       suffix: "h",
       color: "text-blue-400"
     },
     {
       icon: Heart,
-      label: "Satisfacción",
-      value: 98,
+      label: "Inyegracion a operacines",
+      value: 80,
       suffix: "%",
       color: "text-red-400"
     }
