@@ -139,11 +139,11 @@ export default function CasosExito() {
         </div>
       </section>
     </main>
-    </>
 
       <BookCallModal
         isOpen={bookCallModalOpen}
         onClose={() => setBookCallModalOpen(false)}
       />
+    </>
   );
 }

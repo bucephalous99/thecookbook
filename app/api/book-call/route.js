@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { addBookingToNotion } from '@/utils/notion';
+import { addBookingToNotion } from '../../../utils/notion';
 
 export async function POST(request) {
   try {
