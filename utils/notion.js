@@ -30,17 +30,18 @@ export async function addBookingToNotion(bookingData) {
       throw new Error('Invalid email');
     }
     if (!bookingData.preferredDate || !Date.parse(bookingData.preferredDate)) {
-      throw new Error('Invalid preferred date');
+      throw new Error('Invalid date');
     }
 
     // Format date for Notion
-    const preferredDate = new Date(bookingData.preferredDate).toISOString();
+    const date = new Date(bookingData.preferredDate).toISOString();
 
     const response = await notion.pages.create({
       parent: {
         database_id: databaseId,
       },
       properties: {
+        // Title type
         Name: {
           title: [
             {
@@ -50,18 +51,22 @@ export async function addBookingToNotion(bookingData) {
             },
           ],
         },
+        // Email type
         Email: {
           email: bookingData.email.trim(),
         },
-        "Phone Number": {
+        // Phone type
+        Phone: {
           phone_number: bookingData.phone ? bookingData.phone.trim() : null,
         },
-        "Preferred Date": {
+        // Date type
+        Date: {
           date: {
-            start: preferredDate,
+            start: date,
           },
         },
-        Message: {
+        // Text type
+        Text: {
           rich_text: [
             {
               text: {
@@ -70,23 +75,12 @@ export async function addBookingToNotion(bookingData) {
             },
           ],
         },
-        Status: {
-          select: {
-            name: "New",
-          },
-        },
-        "Created At": {
-          date: {
-            start: new Date().toISOString(),
-          },
-        },
       },
     });
 
     return response;
   } catch (error) {
     console.error('Error in addBookingToNotion:', error);
-    // Add more context to the error
     throw new Error(`Failed to create booking: ${error.message}`);
   }
 }
@@ -101,27 +95,5 @@ export async function getBooking(pageId) {
   } catch (error) {
     console.error('Error in getBooking:', error);
     throw new Error(`Failed to retrieve booking: ${error.message}`);
-  }
-}
-
-export async function updateBookingStatus(pageId, status) {
-  try {
-    if (!notion) {
-      throw new Error('Notion integration not configured');
-    }
-    const response = await notion.pages.update({
-      page_id: pageId,
-      properties: {
-        Status: {
-          select: {
-            name: status,
-          },
-        },
-      },
-    });
-    return response;
-  } catch (error) {
-    console.error('Error in updateBookingStatus:', error);
-    throw new Error(`Failed to update booking status: ${error.message}`);
   }
 }
