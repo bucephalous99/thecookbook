@@ -73,9 +73,12 @@ export default function InfiniteIconScroll() {
               href={item.href}
               className="flex-shrink-0 mx-8 group cursor-pointer"
             >
-              <div className="relative w-12 h-12 md:w-16 md:h-16 transition-all duration-300
-                group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]
-                opacity-60 group-hover:opacity-100"
+              <div
+                className={`
+                  relative w-12 h-12 md:w-16 md:h-16 transition-all duration-300
+                  group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]
+                  opacity-60 group-hover:opacity-100
+                `}
               >
                 <Image
                   src={item.image}

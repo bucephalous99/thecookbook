@@ -1,10 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { Camera, TrendingUp, Users, MessageCircle } from 'lucide-react';
+import { Camera, TrendingUp } from 'lucide-react';
 import BookCallModal from '../../components/BookCallModal';
+import Header from '../../components/Header';
 
-const casosExito = [
+interface CasoExito {
+  empresa: string;
+  sector: string;
+  problema: string;
+  solucion: string;
+  resultados: string[];
+  testimonio: string;
+  impacto: string;
+  imagen: string;
+}
+
+const casosExito: CasoExito[] = [
   {
     empresa: "PyME Textil - María González",
     sector: "Manufactura",
@@ -25,7 +37,9 @@ const casosExito = [
 export default function CasosExito() {
   const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
   return (
-    <main className="min-h-screen bg-black pt-24 px-4">
+    <>
+      <Header />
+      <main className="min-h-screen bg-black pt-24 px-4">
       {/* Hero */}
       <section className="max-w-6xl mx-auto text-center mb-16">
         <h1 className="text-5xl font-bold text-green-400 mb-4">
@@ -41,11 +55,11 @@ export default function CasosExito() {
         {casosExito.map((caso, idx) => (
           <article 
             key={idx}
-            className="
+            className={`
               bg-gradient-to-br from-green-500/10 to-emerald-600/5
               border border-green-500/20 rounded-2xl p-8
               hover:border-green-400/40 transition-all duration-300
-            "
+            `}
           >
             <div className="grid md:grid-cols-2 gap-8">
               {/* Imagen/Video */}
@@ -125,6 +139,7 @@ export default function CasosExito() {
         </div>
       </section>
     </main>
+    </>
 
       <BookCallModal
         isOpen={bookCallModalOpen}
