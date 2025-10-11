@@ -3,6 +3,22 @@ import { addBookingToNotion } from '../../../utils/notion';
 
 export async function POST(request) {
   try {
+    // Check environment variables before processing
+    if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
+      console.error('Missing required environment variables:', {
+        hasNotionKey: !!process.env.NOTION_API_KEY,
+        hasDatabaseId: !!process.env.NOTION_DATABASE_ID,
+      });
+
+      return NextResponse.json(
+        {
+          error: 'Booking system is currently unavailable',
+          details: 'Configuration error'
+        },
+        { status: 503 }
+      );
+    }
+
     const data = await request.json();
 
     // Validate required fields
@@ -60,6 +76,17 @@ export async function POST(request) {
       stack: error.stack,
       data: request.body ? 'Present' : 'Missing'
     });
+
+    // Handle different types of errors
+    if (error.message.includes('not configured')) {
+      return NextResponse.json(
+        {
+          error: 'Booking system is temporarily unavailable',
+          details: 'Integration error'
+        },
+        { status: 503 }
+      );
+    }
 
     // Determine if it's a validation error or server error
     const isValidationError = error.message.includes('Invalid') ||

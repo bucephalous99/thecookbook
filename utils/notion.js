@@ -1,21 +1,27 @@
 import { Client } from '@notionhq/client';
 
-if (!process.env.NOTION_API_KEY) {
-  throw new Error('Missing NOTION_API_KEY environment variable');
+let notion = null;
+let databaseId = null;
+
+// Initialize Notion client if environment variables are available
+try {
+  if (process.env.NOTION_API_KEY && process.env.NOTION_DATABASE_ID) {
+    notion = new Client({
+      auth: process.env.NOTION_API_KEY,
+    });
+    databaseId = process.env.NOTION_DATABASE_ID;
+  }
+} catch (error) {
+  console.error('Failed to initialize Notion client:', error);
 }
-
-if (!process.env.NOTION_DATABASE_ID) {
-  throw new Error('Missing NOTION_DATABASE_ID environment variable');
-}
-
-const notion = new Client({
-  auth: process.env.NOTION_API_KEY,
-});
-
-const databaseId = process.env.NOTION_DATABASE_ID;
 
 export async function addBookingToNotion(bookingData) {
   try {
+    // Check if Notion is properly initialized
+    if (!notion || !databaseId) {
+      throw new Error('Notion integration not configured');
+    }
+
     // Input validation
     if (!bookingData.name || typeof bookingData.name !== 'string') {
       throw new Error('Invalid name');
@@ -87,6 +93,9 @@ export async function addBookingToNotion(bookingData) {
 
 export async function getBooking(pageId) {
   try {
+    if (!notion) {
+      throw new Error('Notion integration not configured');
+    }
     const response = await notion.pages.retrieve({ page_id: pageId });
     return response;
   } catch (error) {
@@ -97,6 +106,9 @@ export async function getBooking(pageId) {
 
 export async function updateBookingStatus(pageId, status) {
   try {
+    if (!notion) {
+      throw new Error('Notion integration not configured');
+    }
     const response = await notion.pages.update({
       page_id: pageId,
       properties: {
