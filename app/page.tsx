@@ -10,6 +10,7 @@ import Header from './components/Header';
 import InfiniteIconScroll from './components/InfiniteIconScroll';
 import CatalogSection from './components/CatalogSection';
 import BookCallModal from './components/BookCallModal';
+import { HeroSection } from './components/hero';
 
 export default function Home() {
   const [showLeadForm, setShowLeadForm] = useState(false);
@@ -40,97 +41,14 @@ export default function Home() {
       {/* Clean Gradient Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950"></div>
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl"></div>
       </div>
 
       <Header />
 
       {/* Main Content */}
       <div className="relative z-10">
-
-        {/* HERO SECTION - Optimized Journey */}
-        <section className="min-h-screen flex items-center justify-center px-4 pt-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center space-y-8">
-
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 backdrop-blur-sm border border-teal-400/30 rounded-full text-sm font-semibold text-teal-200 animate-fade-in">
-                <Sparkles className="w-5 h-5" />
-                <span>Automatización IA que funciona mientras duermes</span>
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="text-6xl md:text-8xl lg:text-9xl font-black leading-tight">
-                <span className="block text-white mb-4">Recupera</span>
-                <span className="block bg-gradient-to-r from-teal-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent mb-4">
-                  25+ Horas
-                </span>
-                <span className="block text-gray-300 text-5xl md:text-6xl lg:text-7xl">
-                  Cada Semana
-                </span>
-              </h1>
-
-              {/* Subheadline */}
-              <p className="text-2xl md:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Agentes IA que atienden clientes, toman pedidos y cierran ventas{' '}
-                <span className="text-teal-300 font-bold">24/7 automáticamente</span>
-              </p>
-
-              {/* Primary CTA */}
-              <div className="pt-8">
-                <button
-                  onClick={() => setBookCallModalOpen(true)}
-                  className="group bg-gradient-to-r from-teal-400 to-cyan-400 hover:from-teal-300 hover:to-cyan-300 text-gray-900 font-black py-6 px-12 rounded-2xl text-2xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-[0_0_60px_rgba(20,184,166,0.8)] inline-flex items-center gap-3"
-                >
-                  Quiero Mi Consultoría Gratis
-                  <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
-                </button>
-
-                {/* Trust badges below CTA */}
-                <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400 mt-6">
-                  <span className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-teal-400" />
-                    <span>Sin compromiso</span>
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-teal-400" />
-                    <span>Sin tarjetas de crédito</span>
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-teal-400" />
-                    <span>Respuesta en 24h</span>
-                  </span>
-                </div>
-              </div>
-
-              {/* Social Proof Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto pt-12">
-                {[
-                  { icon: Zap, value: '1,240h', label: 'Ahorradas/Mes', color: 'from-amber-500/20 to-orange-500/20', border: 'border-amber-400/50', iconColor: 'text-amber-300' },
-                  { icon: TrendingUp, value: '2.3x', label: 'Más Ingresos', color: 'from-green-500/20 to-emerald-500/20', border: 'border-green-400/50', iconColor: 'text-green-300' },
-                  { icon: Target, value: '92%', label: 'Auto-Resuelto', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-400/50', iconColor: 'text-blue-300' },
-                  { icon: Heart, value: '50+', label: 'Clientes Felices', color: 'from-rose-500/20 to-pink-500/20', border: 'border-rose-400/50', iconColor: 'text-rose-300' },
-                ].map((stat, idx) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div key={idx} className={`bg-gradient-to-br ${stat.color} backdrop-blur-xl border-2 ${stat.border} rounded-2xl p-6 hover:scale-105 transition-all`}>
-                      <Icon className={`w-10 h-10 ${stat.iconColor} mb-3 mx-auto`} />
-                      <div className="text-4xl font-black text-white mb-1">{stat.value}</div>
-                      <div className="text-sm text-gray-300">{stat.label}</div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Scroll indicator */}
-              <div className="pt-16 animate-bounce">
-                <ChevronDown className="w-8 h-8 text-gray-500 mx-auto" />
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* HERO SECTION */}
+        <HeroSection onBookCall={() => setBookCallModalOpen(true)} />
 
         {/* INFINITE ICON SCROLL DIVIDER */}
         <InfiniteIconScroll />
@@ -298,7 +216,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
       </div>
 
       {/* OPTIMIZED LEAD FORM MODAL */}
