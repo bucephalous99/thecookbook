@@ -4,9 +4,9 @@ import { addBookingToNotion } from '../../../utils/notion';
 export async function POST(request) {
   try {
     // Check environment variables before processing
-    if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
+    if (!process.env.NOTION_TOKEN || !process.env.NOTION_DATABASE_ID) {
       console.error('Missing required environment variables:', {
-        hasNotionKey: !!process.env.NOTION_API_KEY,
+        hasNotionToken: !!process.env.NOTION_TOKEN,
         hasDatabaseId: !!process.env.NOTION_DATABASE_ID,
       });
 

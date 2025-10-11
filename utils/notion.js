@@ -5,9 +5,9 @@ let databaseId = null;
 
 // Initialize Notion client if environment variables are available
 try {
-  if (process.env.NOTION_API_KEY && process.env.NOTION_DATABASE_ID) {
+  if (process.env.NOTION_TOKEN && process.env.NOTION_DATABASE_ID) {
     notion = new Client({
-      auth: process.env.NOTION_API_KEY,
+      auth: process.env.NOTION_TOKEN,
     });
     databaseId = process.env.NOTION_DATABASE_ID;
   }
