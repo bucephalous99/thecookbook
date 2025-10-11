@@ -1,35 +1,62 @@
 'use client';
 
-import {
-  Brain, Code, Zap, Sparkles, Bot, MessageCircle,
-  TrendingUp, Target, Rocket, Shield, Star, Heart,
-  Coffee, Gift, Clock, CheckCircle, Users, Layers
-} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function InfiniteIconScroll() {
-  const icons = [
-    { Icon: Brain, color: 'text-purple-400' },
-    { Icon: Code, color: 'text-blue-400' },
-    { Icon: Zap, color: 'text-yellow-400' },
-    { Icon: Sparkles, color: 'text-pink-400' },
-    { Icon: Bot, color: 'text-teal-400' },
-    { Icon: MessageCircle, color: 'text-cyan-400' },
-    { Icon: TrendingUp, color: 'text-green-400' },
-    { Icon: Target, color: 'text-rose-400' },
-    { Icon: Rocket, color: 'text-orange-400' },
-    { Icon: Shield, color: 'text-indigo-400' },
-    { Icon: Star, color: 'text-amber-400' },
-    { Icon: Heart, color: 'text-red-400' },
-    { Icon: Coffee, color: 'text-yellow-500' },
-    { Icon: Gift, color: 'text-pink-500' },
-    { Icon: Clock, color: 'text-blue-500' },
-    { Icon: CheckCircle, color: 'text-green-500' },
-    { Icon: Users, color: 'text-purple-500' },
-    { Icon: Layers, color: 'text-teal-500' },
+  const serviceIcons = [
+    {
+      name: 'Gmail',
+      image: '/gmail-logo.webp',
+      alt: 'Gmail Integration',
+      href: '#gmail-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'Google Sheets',
+      image: '/google-sheets-logo.png',
+      alt: 'Google Sheets Integration',
+      href: '#sheets-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'Google Drive',
+      image: '/google-drive-logo.png',
+      alt: 'Google Drive Integration',
+      href: '#drive-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'WhatsApp',
+      image: '/whatsapp-logo.webp',
+      alt: 'WhatsApp Integration',
+      href: '#whatsapp-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'Instagram',
+      image: '/instagram-logo.jpg',
+      alt: 'Instagram Integration',
+      href: '#instagram-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'Facebook',
+      image: '/facebook-logo.webp',
+      alt: 'Facebook Integration',
+      href: '#facebook-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'Notion',
+      image: '/notion-logo.png',
+      alt: 'Notion Integration',
+      href: '#notion-catalog' // Placeholder - need actual catalog URL
+    },
+    {
+      name: 'Supabase',
+      image: '/supabase-logo.png',
+      alt: 'Supabase Integration',
+      href: '#supabase-catalog' // Placeholder - need actual catalog URL
+    },
   ];
 
   // Duplicate icons for seamless loop
-  const duplicatedIcons = [...icons, ...icons, ...icons];
+  const duplicatedIcons = [...serviceIcons, ...serviceIcons, ...serviceIcons];
 
   return (
     <div className="w-full overflow-hidden py-16 bg-gradient-to-r from-black/40 via-purple-900/20 to-black/40 backdrop-blur-sm border-y border-white/10">
@@ -40,25 +67,26 @@ export default function InfiniteIconScroll() {
 
         {/* Scrolling container */}
         <div className="flex animate-infinite-scroll">
-          {duplicatedIcons.map((item, idx) => {
-            const Icon = item.Icon;
-            return (
-              <div
-                key={idx}
-                className="flex-shrink-0 mx-8 group cursor-pointer"
+          {duplicatedIcons.map((item, idx) => (
+            <Link
+              key={idx}
+              href={item.href}
+              className="flex-shrink-0 mx-8 group cursor-pointer"
+            >
+              <div className="relative w-12 h-12 md:w-16 md:h-16 transition-all duration-300
+                group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]
+                opacity-60 group-hover:opacity-100"
               >
-                <div className={`
-                  ${item.color}
-                  transition-all duration-300
-                  group-hover:scale-125
-                  group-hover:drop-shadow-[0_0_20px_currentColor]
-                  opacity-60 group-hover:opacity-100
-                `}>
-                  <Icon className="w-12 h-12 md:w-16 md:h-16" strokeWidth={1.8} />
-                </div>
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 48px, 64px"
+                />
               </div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
       </div>
 

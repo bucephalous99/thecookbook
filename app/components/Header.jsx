@@ -5,9 +5,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Brain, ShoppingBag, Code, Info } from 'lucide-react';
+import BookCallModal from './BookCallModal';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isBookCallOpen, setIsBookCallOpen] = useState(false);
   const pathname = usePathname();
 
   const navItems = [
@@ -50,7 +52,9 @@ export default function Header() {
               </Link>
             ))}
             
-            <button className="bg-blue-600 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105">
+            <button
+              onClick={() => setIsBookCallOpen(true)}
+              className="bg-blue-600 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105">
               Book a Call
             </button>
           </nav>
@@ -79,13 +83,21 @@ export default function Header() {
                   {label}
                 </Link>
               ))}
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors w-fit">
+              <button
+                onClick={() => setIsBookCallOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors w-fit">
                 Book a Call
               </button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Book Call Modal */}
+      <BookCallModal
+        isOpen={isBookCallOpen}
+        onClose={() => setIsBookCallOpen(false)}
+      />
     </header>
   );
 }

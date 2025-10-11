@@ -1,4 +1,8 @@
+'use client';
+
+import { useState } from 'react';
 import { Camera, TrendingUp, Users, MessageCircle } from 'lucide-react';
+import BookCallModal from '../../components/BookCallModal';
 
 const casosExito = [
   {
@@ -19,6 +23,7 @@ const casosExito = [
 ];
 
 export default function CasosExito() {
+  const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
   return (
     <main className="min-h-screen bg-black pt-24 px-4">
       {/* Hero */}
@@ -112,11 +117,18 @@ export default function CasosExito() {
           <p className="text-gray-300 mb-8">
             Agenda una consultoría gratuita de 30 minutos
           </p>
-          <button className="bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-4 rounded-xl transition-all">
+          <button
+            onClick={() => setBookCallModalOpen(true)}
+            className="bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-4 rounded-xl transition-all">
             Agendar Consultoría Gratuita
           </button>
         </div>
       </section>
     </main>
+
+      <BookCallModal
+        isOpen={bookCallModalOpen}
+        onClose={() => setBookCallModalOpen(false)}
+      />
   );
 }

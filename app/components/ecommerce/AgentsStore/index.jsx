@@ -10,9 +10,10 @@ import SideMenu from '../../sidebar/SideMenu';
 import MenuButton from '../../ui/buttons/MenuButton';
 import AgentGrid from './AgentGrid';
 import { Z_INDEX } from '../../../constants/zIndex';
+import BookCallModal from '../../BookCallModal';
 
 // Modal de ecosistemas optimizado con useMemo para evitar re-renders
-const EcosystemModal = React.memo(({ isOpen, onClose }) => {
+const EcosystemModal = React.memo(({ isOpen, onClose, onBookCall }) => {
   const ecosystemPacks = useMemo(() => [
     {
       id: 'communication',
@@ -105,7 +106,9 @@ const EcosystemModal = React.memo(({ isOpen, onClose }) => {
         </div>
 
         <footer className="mt-8 text-center">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
+          <button
+            onClick={onBookCall}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
             Book a Call para Ecosistema Custom
           </button>
         </footer>
@@ -123,6 +126,7 @@ export default function AgentsStore() {
   const [iconOnly, setIconOnly] = useState(false);
   const [isNearIcon, setIsNearIcon] = useState(false);
   const [ecosystemModalOpen, setEcosystemModalOpen] = useState(false);
+  const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
 
   // Control de scroll en la página
   useEffect(() => {
@@ -259,7 +263,7 @@ export default function AgentsStore() {
         isVisible={menuVisible && !selectedCategory}
         onCategorySelect={handleCategorySelect}
         onEcosystemSelect={(level) => console.log('Ecosistema:', level)}
-        onCustomCall={() => console.log('Book a call')}
+        onCustomCall={() => setBookCallModalOpen(true)}
         onMouseEnter={handleMenuMouseEnter}
         onMouseLeave={handleMenuMouseLeave}
       />
@@ -277,6 +281,12 @@ export default function AgentsStore() {
       <EcosystemModal
         isOpen={ecosystemModalOpen}
         onClose={() => setEcosystemModalOpen(false)}
+        onBookCall={() => setBookCallModalOpen(true)}
+      />
+
+      <BookCallModal
+        isOpen={bookCallModalOpen}
+        onClose={() => setBookCallModalOpen(false)}
       />
 
       {/* Contenido principal */}

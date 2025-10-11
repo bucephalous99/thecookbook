@@ -9,9 +9,11 @@ import {
 import Header from './components/Header';
 import InfiniteIconScroll from './components/InfiniteIconScroll';
 import CatalogSection from './components/CatalogSection';
+import BookCallModal from './components/BookCallModal';
 
 export default function Home() {
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -79,7 +81,7 @@ export default function Home() {
               {/* Primary CTA */}
               <div className="pt-8">
                 <button
-                  onClick={() => openFormWithSource('hero-cta')}
+                  onClick={() => setBookCallModalOpen(true)}
                   className="group bg-gradient-to-r from-teal-400 to-cyan-400 hover:from-teal-300 hover:to-cyan-300 text-gray-900 font-black py-6 px-12 rounded-2xl text-2xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-[0_0_60px_rgba(20,184,166,0.8)] inline-flex items-center gap-3"
                 >
                   Quiero Mi Consultoría Gratis
@@ -263,7 +265,7 @@ export default function Home() {
                 </p>
 
                 <button
-                  onClick={() => openFormWithSource('cta-final')}
+                  onClick={() => setBookCallModalOpen(true)}
                   className="group bg-gradient-to-r from-teal-400 to-cyan-400 hover:from-teal-300 hover:to-cyan-300 text-gray-900 font-black px-12 py-6 rounded-2xl text-2xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_60px_rgba(20,184,166,0.9)] inline-flex items-center gap-3 mb-8 shadow-2xl"
                 >
                   <Heart className="w-7 h-7 group-hover:scale-110 transition-transform" />
@@ -413,6 +415,11 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      <BookCallModal
+        isOpen={bookCallModalOpen}
+        onClose={() => setBookCallModalOpen(false)}
+      />
     </div>
   );
 }
