@@ -21,40 +21,56 @@
 
 /* Pulse Animation */
 @keyframes ping-custom {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.1); filter: brightness(1.2); }
+  100% { transform: scale(1); filter: brightness(1); }
 }
 
 /* Build Animation */
 @keyframes slide-up-build {
-  from { transform: translateY(100px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  0% { transform: translateY(100px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 /* Heart Formation */
-@keyframes heart-position {
-  0% { transform: scale(0) rotate(0deg); }
-  50% { transform: scale(0.8) rotate(180deg); }
-  100% { transform: scale(1) rotate(360deg); }
+@keyframes heart-position-1 {
+  0% { transform: translate(-100%, -100%) scale(0); opacity: 0; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes heart-position-2 {
+  0% { transform: translate(100%, -100%) scale(0); opacity: 0; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes heart-position-3 {
+  0% { transform: translate(-100%, 100%) scale(0); opacity: 0; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes heart-position-4 {
+  0% { transform: translate(100%, 100%) scale(0); opacity: 0; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
 }
 
 /* Network Lines */
 @keyframes draw-line {
-  from { stroke-dashoffset: 100; }
-  to { stroke-dashoffset: 0; }
+  0% { stroke-dashoffset: 200; opacity: 0; }
+  50% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
 }
 
 /* Float Animation */
 @keyframes float-up-down {
-  0%, 100% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
 }
 
-.orbital-animation-1 { animation: orbit-1 12s linear infinite; }
-.orbital-animation-2 { animation: orbit-2 12s linear infinite; }
-.orbital-animation-3 { animation: orbit-3 12s linear infinite; }
-.orbital-animation-4 { animation: orbit-4 12s linear infinite; }
+/* Animation Classes */
+.orbital-animation-1 { animation: orbit-1 12s linear infinite; transform-origin: center; }
+.orbital-animation-2 { animation: orbit-2 12s linear infinite; transform-origin: center; }
+.orbital-animation-3 { animation: orbit-3 12s linear infinite; transform-origin: center; }
+.orbital-animation-4 { animation: orbit-4 12s linear infinite; transform-origin: center; }
 
 .pulse-animation { animation: ping-custom 2s ease-in-out infinite; }
 
@@ -63,18 +79,24 @@
 .build-animation-3 { animation: slide-up-build 0.5s ease-out forwards; animation-delay: 0.4s; }
 .build-animation-4 { animation: slide-up-build 0.5s ease-out forwards; animation-delay: 0.6s; }
 
-.heart-animation-1 { animation: heart-position 2s ease-in-out infinite; animation-delay: 0s; }
-.heart-animation-2 { animation: heart-position 2s ease-in-out infinite; animation-delay: 0.5s; }
-.heart-animation-3 { animation: heart-position 2s ease-in-out infinite; animation-delay: 1s; }
-.heart-animation-4 { animation: heart-position 2s ease-in-out infinite; animation-delay: 1.5s; }
+.heart-animation-1 { animation: heart-position-1 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.heart-animation-2 { animation: heart-position-2 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.2s; }
+.heart-animation-3 { animation: heart-position-3 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.4s; }
+.heart-animation-4 { animation: heart-position-4 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.6s; }
 
 .network-line {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: draw-line 2s ease-in-out forwards;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw-line 1.5s ease-in-out forwards;
 }
 
 .float-animation-1 { animation: float-up-down 3s ease-in-out infinite; animation-delay: 0s; }
 .float-animation-2 { animation: float-up-down 3s ease-in-out infinite; animation-delay: 0.75s; }
 .float-animation-3 { animation: float-up-down 3s ease-in-out infinite; animation-delay: 1.5s; }
 .float-animation-4 { animation: float-up-down 3s ease-in-out infinite; animation-delay: 2.25s; }
+
+/* Transition classes */
+.template-enter { opacity: 0; transform: scale(0.95); }
+.template-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms, transform 300ms; }
+.template-exit { opacity: 1; transform: scale(1); }
+.template-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 300ms, transform 300ms; }

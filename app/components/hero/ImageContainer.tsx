@@ -9,6 +9,21 @@ interface Props {
 }
 
 export const ImageContainer = ({ template }: Props) => {
+  const getImagePositionClass = (position: string) => {
+    switch (position) {
+      case 'top-left':
+        return 'left-[20%] top-[20%]';
+      case 'top-right':
+        return 'right-[20%] top-[20%]';
+      case 'bottom-left':
+        return 'left-[20%] bottom-[20%]';
+      case 'bottom-right':
+        return 'right-[20%] bottom-[20%]';
+      default:
+        return '';
+    }
+  };
+
   const getAnimationClass = (index: number) => {
     switch (template.animation) {
       case 'orbital':
@@ -19,6 +34,8 @@ export const ImageContainer = ({ template }: Props) => {
         return `build-animation-${index + 1}`;
       case 'heart':
         return `heart-animation-${index + 1}`;
+      case 'network':
+        return '';
       case 'float':
         return `float-animation-${index + 1}`;
       default:
@@ -26,46 +43,73 @@ export const ImageContainer = ({ template }: Props) => {
     }
   };
 
-  const getImageStyles = (position: string) => {
-    const baseStyles = 'absolute w-16 h-16 md:w-24 md:h-24 transition-all duration-500';
-    switch (position) {
-      case 'top-left':
-        return `${baseStyles} top-0 left-0`;
-      case 'top-right':
-        return `${baseStyles} top-0 right-0`;
-      case 'bottom-left':
-        return `${baseStyles} bottom-0 left-0`;
-      case 'bottom-right':
-        return `${baseStyles} bottom-0 right-0`;
-      default:
-        return baseStyles;
-    }
-  };
-
   return (
-    <div className="relative h-64 w-full max-w-2xl mx-auto">
+    <div className="relative w-full h-64 md:h-80">
+      {/* Network lines (rendered first for z-index) */}
       {template.animation === 'network' && (
-        <svg className="absolute inset-0 w-full h-full">
-          <line x1="20%" y1="20%" x2="80%" y2="20%" className="network-line" stroke="currentColor" strokeWidth="2"/>
-          <line x1="80%" y1="20%" x2="80%" y2="80%" className="network-line" stroke="currentColor" strokeWidth="2"/>
-          <line x1="80%" y1="80%" x2="20%" y2="80%" className="network-line" stroke="currentColor" strokeWidth="2"/>
-          <line x1="20%" y1="80%" x2="20%" y2="20%" className="network-line" stroke="currentColor" strokeWidth="2"/>
-          <line x1="20%" y1="20%" x2="80%" y2="80%" className="network-line" stroke="currentColor" strokeWidth="2"/>
-          <line x1="20%" y1="80%" x2="80%" y2="20%" className="network-line" stroke="currentColor" strokeWidth="2"/>
+        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+          <line
+            x1="25%" y1="25%" x2="75%" y2="25%"
+            className="network-line"
+            stroke="rgba(99, 102, 241, 0.4)"
+            strokeWidth="2"
+          />
+          <line
+            x1="75%" y1="25%" x2="75%" y2="75%"
+            className="network-line"
+            stroke="rgba(99, 102, 241, 0.4)"
+            strokeWidth="2"
+          />
+          <line
+            x1="75%" y1="75%" x2="25%" y2="75%"
+            className="network-line"
+            stroke="rgba(99, 102, 241, 0.4)"
+            strokeWidth="2"
+          />
+          <line
+            x1="25%" y1="75%" x2="25%" y2="25%"
+            className="network-line"
+            stroke="rgba(99, 102, 241, 0.4)"
+            strokeWidth="2"
+          />
+          <line
+            x1="25%" y1="25%" x2="75%" y2="75%"
+            className="network-line"
+            stroke="rgba(99, 102, 241, 0.4)"
+            strokeWidth="2"
+          />
+          <line
+            x1="75%" y1="25%" x2="25%" y2="75%"
+            className="network-line"
+            stroke="rgba(99, 102, 241, 0.4)"
+            strokeWidth="2"
+          />
         </svg>
       )}
 
-      {template.images.map((image, index) => (
+      {/* Images */}
+      {template.images.map((img, index) => (
         <div
-          key={image.src}
-          className={`${getImageStyles(image.position)} ${getAnimationClass(index)}`}
+          key={`${template.id}-${index}`}
+          className={`
+            absolute w-16 h-16 md:w-20 md:h-20
+            ${getImagePositionClass(img.position)}
+            transition-all duration-500 ease-out
+            ${getAnimationClass(index)}
+          `}
         >
           <Image
-            src={image.src}
-            alt={image.alt}
+            src={img.src}
+            alt={img.alt}
             fill
-            className="object-contain"
-            sizes="(max-width: 768px) 64px, 96px"
+            className={`
+              object-contain
+              rounded-xl
+              ${template.animation === 'network' ? 'bg-white/5 p-2' : ''}
+              ${template.animation === 'pulse' ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]' : ''}
+            `}
+            sizes="(max-width: 768px) 64px, 80px"
+            quality={90}
           />
         </div>
       ))}
