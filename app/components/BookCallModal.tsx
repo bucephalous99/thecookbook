@@ -118,14 +118,35 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
     setCurrentWeek(newDate);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedDate && selectedTime) {
-      console.log('Booking:', {
-        date: selectedDate.toDateString(),
-        time: selectedTime
-      });
-      // Add your booking logic here
-      onClose();
+      try {
+        const response = await fetch('/api/book-call', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: 'Test User', // This will be replaced with actual form data
+            email: 'test@example.com', // This will be replaced with actual form data
+            phone: '', // Optional
+            preferredDate: `${selectedDate.toISOString().split('T')[0]}T${selectedTime}:00.000Z`,
+            message: `Scheduled time: ${selectedTime}`, // Optional additional information
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to book call');
+        }
+
+        const result = await response.json();
+        console.log('Booking created:', result);
+        onClose();
+      } catch (error) {
+        console.error('Error creating booking:', error);
+        // Here you would typically show an error message to the user
+      }
     }
   };
 
