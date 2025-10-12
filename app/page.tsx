@@ -17,23 +17,23 @@ export default function Home() {
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    nombre: '',
+    name: '',
     email: '',
-    telefono: '',
-    negocio: '',
-    origen: ''
+    phone: '',
+    business: '',
+    source: ''
   });
 
   const handleLeadSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Lead capturado:', formData);
-    alert(`¡Gracias ${formData.nombre}! 🎉\n\nTe contactaremos en las próximas 24h.`);
+    console.log('Lead captured:', formData);
+    alert(`Thanks ${formData.name}! 🎉\n\nWe'll contact you within 24h.`);
     setShowLeadForm(false);
-    setFormData({ nombre: '', email: '', telefono: '', negocio: '', origen: '' });
+    setFormData({ name: '', email: '', phone: '', business: '', source: '' });
   };
 
   const openFormWithSource = (source: string) => {
-    setFormData({...formData, origen: source});
+    setFormData({...formData, source});
     setShowLeadForm(true);
   };
 
@@ -82,16 +82,16 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-5xl md:text-6xl font-display font-bold text-white mb-6">
-                ¿Te Suena <span className="text-rose-400">Familiar</span>?
+                Does This Sound <span className="text-rose-400">Familiar</span>?
               </h2>
-              <p className="text-xl text-gray-400">La realidad de emprender sin automatización</p>
+              <p className="text-xl text-gray-400">The reality of running a business without automation</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {[
-                { emoji: '😫', problem: 'Trabajas 70h/semana', detail: 'Pero tu negocio no crece al mismo ritmo' },
-                { emoji: '📱', problem: 'Contestas WhatsApp 24/7', detail: 'Incluidos fines de semana y vacaciones' },
-                { emoji: '💸', problem: 'Pierdes ventas diario', detail: 'Porque no puedes atender a todos a tiempo' },
+                { emoji: '😫', problem: 'Working 70h/week', detail: 'But your business growth doesn't match your effort' },
+                { emoji: '📱', problem: 'Always on WhatsApp', detail: 'Including weekends and holidays' },
+                { emoji: '💸', problem: 'Missing opportunities', detail: 'Because you can't respond to everyone in time' },
               ].map((item, idx) => (
                 <div key={idx} className="bg-gradient-to-br from-red-900/20 to-rose-900/20 backdrop-blur-xl border-2 border-red-500/30 rounded-3xl p-8 text-center">
                   <div className="text-6xl mb-4">{item.emoji}</div>
@@ -104,16 +104,16 @@ export default function Home() {
             {/* Solution Preview */}
             <div className="bg-gradient-to-br from-primary/10 to-accent/10 backdrop-blur-xl border-2 border-primary/40 rounded-3xl p-12 text-center">
               <h3 className="text-4xl font-display font-bold text-white mb-4">
-                Pero hay una <span className="text-primary-light">Solución Simple</span>
+                But there's a <span className="text-primary-light">Simple Solution</span>
               </h3>
               <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-                Agentes IA que replican tu mejor vendedor, trabajan 24/7 y nunca piden vacaciones
+                AI agents that replicate your best employee, work 24/7, and never take vacations
               </p>
               <button
-                onClick={() => document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 hover:border-white/50 rounded-xl text-white font-bold transition-all hover:scale-105"
               >
-                Ver Cómo Funciona
+                See How It Works
                 <ChevronDown className="w-5 h-5" />
               </button>
             </div>
@@ -124,7 +124,7 @@ export default function Home() {
         <InfiniteIconScroll />
 
         {/* CATALOG SECTION - Customer Journey Step 3 */}
-        <div id="servicios">
+        <div id="services">
           <CatalogSection onOpenForm={openFormWithSource} />
         </div>
 
@@ -136,39 +136,39 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-5xl md:text-6xl font-display font-bold text-white mb-6">
-                Resultados{' '}
+                Real{' '}
                 <span className="bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text text-transparent">
-                  Reales
+                  Results
                 </span>
               </h2>
               <p className="text-xl text-gray-400">
-                Transformaciones verificadas de emprendedores como tú
+                Verified transformations from business owners like you
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
-                  name: 'María González',
-                  business: 'Panadería La Dulzura',
-                  result: 'De 70h a 40h/semana. Mismo revenue.',
-                  quote: 'El agente IA toma pedidos mientras duermo. Ahora tengo tiempo para mi familia.',
+                  name: 'Maria Gonzalez',
+                  business: 'Sweet Dreams Bakery',
+                  result: 'From 70h to 40h/week. Same revenue.',
+                  quote: 'The AI agent takes orders while I sleep. Now I have time for my family.',
                   gradient: 'from-purple-500/20 to-pink-500/20',
                   border: 'border-purple-400/40'
                 },
                 {
                   name: 'Carlos Mendoza',
-                  business: 'Taller Mecánico Express',
-                  result: '+150% en citas agendadas',
-                  quote: 'El chatbot responde al instante. Mis clientes aman la velocidad.',
+                  business: 'Express Auto Service',
+                  result: '+150% in scheduled appointments',
+                  quote: 'The chatbot responds instantly. My customers love the speed.',
                   gradient: 'from-primary/20 to-accent/20',
                   border: 'border-primary/40'
                 },
                 {
-                  name: 'Ana Rodríguez',
-                  business: 'Boutique Fashion Style',
-                  result: '23h/semana para familia',
-                  quote: 'La IA maneja todo. Yo solo apruebo. Game changer total.',
+                  name: 'Ana Rodriguez',
+                  business: 'Fashion Style Boutique',
+                  result: '23h/week back for family',
+                  quote: 'AI handles everything. I just approve. Total game changer.',
                   gradient: 'from-rose-500/20 to-orange-500/20',
                   border: 'border-rose-400/40'
                 },
@@ -208,14 +208,14 @@ export default function Home() {
 
               <div className="relative z-10">
                 <h2 className="text-5xl md:text-6xl font-display font-bold text-white mb-6 leading-tight">
-                  ¿Listo para Recuperar<br />
-                  <span className="text-primary-light">Tu Vida</span>?
+                  Ready to Reclaim<br />
+                  <span className="text-primary-light">Your Life</span>?
                 </h2>
 
                 <p className="text-2xl text-gray-200 mb-12 max-w-3xl mx-auto">
-                  Agenda tu consultoría gratuita ahora.<br />
+                  Schedule your free consultation now.<br />
                   <span className="text-primary-light font-bold">
-                    Cero compromiso. Cero riesgo. Solo resultados.
+                    Zero commitment. Zero risk. Just results.
                   </span>
                 </p>
 
@@ -224,30 +224,30 @@ export default function Home() {
                   className="group bg-gradient-to-r from-primary to-accent hover:from-primary-light hover:to-accent text-gray-900 font-display font-bold px-12 py-6 rounded-2xl text-2xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_60px_rgba(20,184,166,0.5)] inline-flex items-center gap-3 mb-8 shadow-2xl"
                 >
                   <Heart className="w-7 h-7 group-hover:scale-110 transition-transform" />
-                  Agendar Ahora (Gratis)
+                  Schedule Now (Free)
                   <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
                 </button>
 
                 <div className="flex flex-wrap items-center justify-center gap-8 text-base text-gray-300">
                   <span className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-primary-light" />
-                    <span>Sin compromiso</span>
+                    <span>No commitment</span>
                   </span>
                   <span className="flex items-center gap-2">
                     <Shield className="w-5 h-5 text-primary-light" />
-                    <span>Sin tarjetas</span>
+                    <span>No credit card</span>
                   </span>
                   <span className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-primary-light" />
-                    <span>Respuesta en 24h</span>
+                    <span>24h response</span>
                   </span>
                 </div>
 
                 <div className="pt-10 mt-10 border-t border-gray-700/50">
                   <p className="text-gray-400 text-lg">
-                    <span className="text-yellow-300 font-bold">Garantía:</span>{' '}
-                    Si después de la llamada decides que no es para ti,
-                    te mandamos una guía gratuita con 5 automatizaciones que puedes hacer tú mismo/a.
+                    <span className="text-yellow-300 font-bold">Guarantee:</span>{' '}
+                    If after the call you decide it's not for you,
+                    we'll send you a free guide with 5 automations you can implement yourself.
                   </p>
                 </div>
               </div>
@@ -272,27 +272,27 @@ export default function Home() {
                 <Heart className="w-10 h-10 text-white animate-pulse" />
               </div>
               <h3 className="text-4xl font-display font-bold text-white mb-3">
-                ¡Último Paso!
+                Final Step!
               </h3>
               <p className="text-gray-300 text-lg">
-                Te contactamos en{' '}
-                <span className="text-primary-light font-bold">menos de 24h</span>
+                We'll contact you in{' '}
+                <span className="text-primary-light font-bold">less than 24h</span>
               </p>
             </div>
 
             <form onSubmit={handleLeadSubmit} className="space-y-5">
               <div>
                 <label className="block text-gray-300 mb-2 font-semibold">
-                  ¿Cómo te llamas? *
+                  Your name *
                 </label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     required
-                    value={formData.nombre}
-                    onChange={(e) => setFormData({...formData, nombre: e.target.value})}
-                    placeholder="María García"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="John Smith"
                     className="w-full bg-white/10 border-2 border-primary/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all text-lg"
                   />
                 </div>
@@ -300,7 +300,7 @@ export default function Home() {
 
               <div>
                 <label className="block text-gray-300 mb-2 font-semibold">
-                  Tu mejor email *
+                  Best email *
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -309,7 +309,7 @@ export default function Home() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    placeholder="maria@ejemplo.com"
+                    placeholder="john@example.com"
                     className="w-full bg-white/10 border-2 border-primary/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all text-lg"
                   />
                 </div>
@@ -317,16 +317,16 @@ export default function Home() {
 
               <div>
                 <label className="block text-gray-300 mb-2 font-semibold">
-                  WhatsApp *
+                  Phone *
                 </label>
                 <div className="relative">
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="tel"
                     required
-                    value={formData.telefono}
-                    onChange={(e) => setFormData({...formData, telefono: e.target.value})}
-                    placeholder="+507 6123-4567"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    placeholder="+1 555-123-4567"
                     className="w-full bg-white/10 border-2 border-primary/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all text-lg"
                   />
                 </div>
@@ -334,16 +334,16 @@ export default function Home() {
 
               <div>
                 <label className="block text-gray-300 mb-2 font-semibold">
-                  Tu negocio *
+                  Your business *
                 </label>
                 <div className="relative">
                   <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     required
-                    value={formData.negocio}
-                    onChange={(e) => setFormData({...formData, negocio: e.target.value})}
-                    placeholder="Ej: Panadería, Consultoría..."
+                    value={formData.business}
+                    onChange={(e) => setFormData({...formData, business: e.target.value})}
+                    placeholder="E.g., Bakery, Consulting..."
                     className="w-full bg-white/10 border-2 border-primary/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all text-lg"
                   />
                 </div>
@@ -354,17 +354,17 @@ export default function Home() {
                 className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary-light hover:to-accent text-white font-display font-bold py-5 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(20,184,166,0.5)] flex items-center justify-center gap-3 mt-8 text-xl"
               >
                 <Sparkles className="w-6 h-6" />
-                Confirmar Consultoría Gratis
+                Confirm Free Consultation
               </button>
 
               <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mt-6">
                 <span className="flex items-center gap-1">
                   <Shield className="w-4 h-4 text-primary-light" />
-                  Datos 100% seguros
+                  100% secure data
                 </span>
                 <span className="flex items-center gap-1">
                   <CheckCircle className="w-4 h-4 text-primary-light" />
-                  Sin spam
+                  No spam
                 </span>
               </div>
             </form>
