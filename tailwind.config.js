@@ -14,11 +14,17 @@ module.exports = {
       colors: {
         primary: {
           DEFAULT: '#14b8a6', // teal-500
-          light: '#5eead4', // teal-300
+          light: '#5eead4',   // teal-300
+          dark: '#0f766e',    // teal-700
         },
-        accent: '#06b6d4', // cyan-500
-        dark: '#0f172a', // slate-900
-        gray: '#1e293b', // slate-800
+        accent: {
+          DEFAULT: '#06b6d4', // cyan-500
+          light: '#67e8f9',   // cyan-300
+        },
+        dark: {
+          DEFAULT: '#0f172a', // slate-900
+          secondary: '#1e293b', // slate-800
+        }
       },
       animation: {
         'fade-in': 'fade-in 0.5s ease-in-out',

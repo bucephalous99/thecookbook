@@ -7,7 +7,6 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
-  preload: true,
   weight: ['400', '500', '600', '700'],
 });
 
@@ -15,22 +14,21 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-space-grotesk',
-  preload: true,
-  weight: ['500', '700'],
+  weight: ['500', '600', '700'],
 });
 
 export const metadata = {
-  title: 'The CookBook Labs - AI Automation',
-  description: 'Agentes IA que automatizan tu negocio 24/7',
+  title: 'The CookBook Labs - AI Automation for SMBs',
+  description: 'Automate your business tasks and get back one extra day per week',
   icons: {
     icon: '/icon.png',
   },
   openGraph: {
-    title: 'The CookBook Labs - AI Automation',
-    description: 'Agentes IA que automatizan tu negocio 24/7',
+    title: 'The CookBook Labs - AI Automation for SMBs',
+    description: 'Automate your business tasks and get back one extra day per week',
     url: 'https://www.thecookbook.lat',
     siteName: 'The CookBook',
-    locale: 'es',
+    locale: 'en',
     type: 'website',
   },
 };
@@ -42,7 +40,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="es"
+      lang="en"
       className={`${inter.variable} ${spaceGrotesk.variable}`}
     >
       <head>

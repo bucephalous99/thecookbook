@@ -7,6 +7,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import Header from './components/Header';
+import HeroSimple from './components/HeroSimple';
 import InfiniteIconScroll from './components/InfiniteIconScroll';
 import CatalogSection from './components/CatalogSection';
 import BookCallModal from './components/BookCallModal';
@@ -47,62 +48,32 @@ export default function Home() {
       {/* Main Content */}
       <div className="relative z-10">
         {/* HERO SECTION */}
-        <section className="min-h-[90vh] flex items-center justify-center px-4 pt-20">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 border border-primary/30 rounded-full text-sm font-medium text-primary-light mb-8 animate-fade-in">
-              <Sparkles className="w-5 h-5" />
-              <span>El tiempo de respuesta determina la decisión de compra</span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="font-display text-6xl md:text-7xl font-bold mb-6 leading-tight animate-slide-up">
-              No los hagas esperar.{' '}
-              <span className="text-primary-light">
-                Respuesta automática en segundos
-              </span>
-            </h1>
-
-            {/* CTA Button */}
-            <button
-              onClick={() => setBookCallModalOpen(true)}
-              className="group bg-primary hover:bg-primary-light text-gray-900 font-display font-bold py-6 px-12 rounded-2xl text-2xl transition-all duration-300 hover:scale-105 shadow-2xl inline-flex items-center gap-3 animate-fade-in"
-            >
-              Ver Cómo Funciona
-              <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
-            </button>
-
-            {/* Trust Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400 mt-6 animate-fade-in">
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-primary" />
-                <span>Implementación en 24h</span>
-              </span>
-              <span className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-primary" />
-                <span>Resultados garantizados</span>
-              </span>
-            </div>
-
-            {/* Key Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16">
-              {[
-                { value: '92%', label: 'Respuestas automáticas', icon: Target },
-                { value: '24/7', label: 'Disponibilidad', icon: Clock },
-                { value: '< 5s', label: 'Tiempo de respuesta', icon: Zap },
-              ].map((stat, idx) => {
-                const Icon = stat.icon;
-                return (
-                  <div key={idx} className="bg-primary/10 rounded-2xl p-6 animate-fade-in">
-                    <Icon className="w-10 h-10 text-primary-light mb-3 mx-auto animate-pulse-slow" />
-                    <div className="text-4xl font-display font-bold text-white mb-1">{stat.value}</div>
-                    <div className="text-sm text-gray-300">{stat.label}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <HeroSimple
+          icon={<Clock className="w-20 h-20" />}
+          title="One extra day a week is now possible"
+          subtitle="Optimizing those tasks that consume 2-3 hours of your day"
+          ctaText="Schedule Free Consultation"
+          onCtaClick={() => setBookCallModalOpen(true)}
+          features={[
+            {
+              icon: <Shield className="w-6 h-6" />,
+              text: "No commitment"
+            },
+            {
+              icon: <Clock className="w-6 h-6" />,
+              text: "24h response"
+            },
+            {
+              icon: <Zap className="w-6 h-6" />,
+              text: "Fast setup"
+            },
+            {
+              icon: <TrendingUp className="w-6 h-6" />,
+              text: "Guaranteed ROI"
+            }
+          ]}
+          variant="gradient"
+        />
 
         {/* INFINITE ICON SCROLL DIVIDER */}
         <InfiniteIconScroll />
