@@ -1,5 +1,6 @@
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { SearchProvider } from './context/SearchContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { Toaster } from 'sonner';
 import './globals.css';
 
@@ -63,9 +64,11 @@ export default function RootLayout({
           expand={false}
           richColors
         />
-        <SearchProvider>
-          {children}
-        </SearchProvider>
+        <LanguageProvider>
+          <SearchProvider>
+            {children}
+          </SearchProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

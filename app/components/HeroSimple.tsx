@@ -1,15 +1,13 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { cn } from '../../lib/utils';
+import { useLanguage } from '../context/LanguageContext';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface HeroSimpleProps {
   /** Main icon displayed at the top of the hero section */
   icon?: React.ReactNode;
-  /** Main title text (h1) */
-  title: string;
-  /** Descriptive subtitle text */
-  subtitle: string;
-  /** Call-to-action button text */
-  ctaText: string;
   /** Call-to-action click handler */
   onCtaClick: () => void;
   /** Optional feature list with icons */
@@ -25,14 +23,23 @@ interface HeroSimpleProps {
 
 const HeroSimple = React.memo(({
   icon,
-  title,
-  subtitle,
-  ctaText,
   onCtaClick,
   features = [],
   variant = 'default',
   alignment = 'center',
 }: HeroSimpleProps) => {
+  const { t } = useLanguage();
+  const [messageIndex, setMessageIndex] = useState(0);
+  const messages = t('hero_messages');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMessageIndex((current) => (current + 1) % messages.length);
+    }, 10000); // Rotate every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [messages.length]);
+
   // Style variants
   const variants = {
     default: 'bg-dark text-white',
@@ -44,6 +51,13 @@ const HeroSimple = React.memo(({
   const alignmentStyles = {
     center: 'text-center items-center',
     left: 'text-left items-start',
+  };
+
+  // Animation variants
+  const textAnimations = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
   };
 
   return (
@@ -63,16 +77,27 @@ const HeroSimple = React.memo(({
       )}
 
       {/* Main Content */}
-      <h1
-        id="hero-title"
-        className="font-display font-bold text-4xl md:text-5xl lg:text-6xl max-w-4xl mb-6"
-      >
-        {title}
-      </h1>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={messageIndex}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={textAnimations}
+          transition={{ duration: 0.5 }}
+        >
+          <h1
+            id="hero-title"
+            className="font-display font-bold text-4xl md:text-5xl lg:text-6xl max-w-4xl mb-6"
+          >
+            {messages[messageIndex].title}
+          </h1>
 
-      <p className="font-sans text-lg md:text-xl max-w-2xl mb-12 opacity-90">
-        {subtitle}
-      </p>
+          <p className="font-sans text-lg md:text-xl max-w-2xl mb-12 opacity-90">
+            {messages[messageIndex].subtitle}
+          </p>
+        </motion.div>
+      </AnimatePresence>
 
       {/* CTA Button */}
       <button
@@ -84,9 +109,9 @@ const HeroSimple = React.memo(({
             ? 'bg-primary text-white hover:bg-primary-light'
             : 'bg-white text-dark hover:bg-accent-light hover:text-dark'
         )}
-        aria-label={ctaText}
+        aria-label={t('cta')}
       >
-        {ctaText}
+        {t('cta')}
       </button>
 
       {/* Features Grid */}
@@ -105,7 +130,7 @@ const HeroSimple = React.memo(({
                 {feature.icon}
               </div>
               <span className="font-medium">
-                {feature.text}
+                {t(`features.${feature.text.toLowerCase().replace(/ /g, '_')}`)}
               </span>
             </div>
           ))}

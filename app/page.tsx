@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Header from './components/Header';
 import HeroSimple from './components/HeroSimple';
+import LanguageSwitch from './components/LanguageSwitch';
 import InfiniteIconScroll from './components/InfiniteIconScroll';
 import CatalogSection from './components/CatalogSection';
 import BookCallModal from './components/BookCallModal';
@@ -47,12 +48,10 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="relative z-10">
+        <LanguageSwitch />
         {/* HERO SECTION */}
         <HeroSimple
           icon={<Clock className="w-20 h-20" />}
-          title="One extra day a week is now possible"
-          subtitle="Optimizing those tasks that consume 2-3 hours of your day"
-          ctaText="Schedule Free Consultation"
           onCtaClick={() => setBookCallModalOpen(true)}
           features={[
             {
