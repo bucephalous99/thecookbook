@@ -4,13 +4,33 @@ import React, { createContext, useContext, useState } from 'react';
 
 type Language = 'en' | 'es';
 
+interface HeroMessage {
+  title: string;
+  subtitle: string;
+}
+
+interface Translations {
+  hero_messages: HeroMessage[];
+  cta: string;
+  features: {
+    no_commitment: string;
+    response_24h: string;
+    fast_setup: string;
+    guaranteed_roi: string;
+  };
+}
+
+interface TranslationDictionary {
+  [key: string]: Translations;
+}
+
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string) => any;
 }
 
-const translations = {
+const translations: TranslationDictionary = {
   en: {
     // Hero messages
     hero_messages: [
@@ -74,7 +94,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
 
-  const t = (key: string): string => {
+  const t = (key: string): any => {
     const keys = key.split('.');
     let value: any = translations[language];
 

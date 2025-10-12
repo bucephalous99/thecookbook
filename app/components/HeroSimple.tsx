@@ -5,6 +5,11 @@ import { cn } from '../../lib/utils';
 import { useLanguage } from '../context/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 
+interface HeroMessage {
+  title: string;
+  subtitle: string;
+}
+
 interface HeroSimpleProps {
   /** Main icon displayed at the top of the hero section */
   icon?: React.ReactNode;
@@ -30,7 +35,7 @@ const HeroSimple = React.memo(({
 }: HeroSimpleProps) => {
   const { t } = useLanguage();
   const [messageIndex, setMessageIndex] = useState(0);
-  const messages = t('hero_messages');
+  const messages = t('hero_messages') as HeroMessage[];
 
   useEffect(() => {
     const interval = setInterval(() => {
