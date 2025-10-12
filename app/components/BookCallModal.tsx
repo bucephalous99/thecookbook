@@ -1,5 +1,6 @@
 'use client';
 
+import { Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Shield, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -125,13 +126,13 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
             {/* Features */}
             <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
               {t.features.map((feature, index) => (
-                <React.Fragment key={index}>
+                <Fragment key={index}>
                   {index > 0 && <span>•</span>}
                   <span className="flex items-center gap-1">
                     {feature.icon}
                     {feature.text}
                   </span>
-                </React.Fragment>
+                </Fragment>
               ))}
             </div>
           </motion.div>

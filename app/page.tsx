@@ -89,9 +89,9 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {[
-                { emoji: '😫', problem: 'Working 70h/week', detail: 'But your business growth doesn't match your effort' },
+                { emoji: '😫', problem: 'Working 70h/week', detail: 'But your business growth doesn\'t match your effort' },
                 { emoji: '📱', problem: 'Always on WhatsApp', detail: 'Including weekends and holidays' },
-                { emoji: '💸', problem: 'Missing opportunities', detail: 'Because you can't respond to everyone in time' },
+                { emoji: '💸', problem: 'Missing opportunities', detail: 'Because you can\'t respond to everyone in time' },
               ].map((item, idx) => (
                 <div key={idx} className="bg-gradient-to-br from-red-900/20 to-rose-900/20 backdrop-blur-xl border-2 border-red-500/30 rounded-3xl p-8 text-center">
                   <div className="text-6xl mb-4">{item.emoji}</div>
