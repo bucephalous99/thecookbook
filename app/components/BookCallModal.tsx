@@ -86,7 +86,7 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="bg-dark-secondary border border-primary/20 rounded-2xl p-8 max-w-md w-full relative z-10"
+            className="bg-dark-secondary border border-primary/20 rounded-2xl p-4 sm:p-6 md:p-8 w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] max-w-md mx-auto relative z-10"
           >
             {/* Header */}
             <div className="text-center mb-8">
@@ -110,7 +110,7 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
                 {t.calendar.description}
               </p>
 
-              <div className="grid grid-cols-3 gap-2 text-center text-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-sm">
                 {/* Sample calendar slots - replace with actual calendar integration */}
                 {['9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM'].map((time) => (
                   <button
@@ -124,7 +124,7 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
             </div>
 
             {/* Features */}
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-gray-400">
               {t.features.map((feature, index) => (
                 <Fragment key={index}>
                   {index > 0 && <span>•</span>}
