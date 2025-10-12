@@ -98,7 +98,7 @@ const HeroSimple = React.memo(({
             {messages[messageIndex].title}
           </h1>
 
-          <p className="font-sans text-lg md:text-xl max-w-2xl mb-12 opacity-90">
+          <p className="font-sans text-lg md:text-xl max-w-2xl mx-auto mb-12 opacity-90 text-center">
             {messages[messageIndex].subtitle}
           </p>
         </motion.div>
