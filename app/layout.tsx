@@ -1,22 +1,50 @@
-import type { Metadata } from 'next'
-import { SearchProvider } from './context/SearchContext'
-import './globals.css'
+import { Inter, Space_Grotesk } from 'next/font/google';
+import { SearchProvider } from './context/SearchContext';
+import { Toaster } from 'sonner';
+import './globals.css';
 
-export const metadata: Metadata = {
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  preload: true,
+  weight: ['400', '500', '600', '700'],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+  preload: true,
+  weight: ['500', '700'],
+});
+
+export const metadata = {
   title: 'The CookBook Labs - AI Automation',
   description: 'Agentes IA que automatizan tu negocio 24/7',
   icons: {
     icon: '/icon.png',
   },
-}
+  openGraph: {
+    title: 'The CookBook Labs - AI Automation',
+    description: 'Agentes IA que automatizan tu negocio 24/7',
+    url: 'https://www.thecookbook.lat',
+    siteName: 'The CookBook',
+    locale: 'es',
+    type: 'website',
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html
+      lang="es"
+      className={`${inter.variable} ${spaceGrotesk.variable}`}
+    >
       <head>
         <script
           type="text/javascript"
@@ -31,11 +59,16 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body className="min-h-screen bg-slate-900 text-white font-sans">
+        <Toaster
+          position="top-center"
+          expand={false}
+          richColors
+        />
         <SearchProvider>
           {children}
         </SearchProvider>
       </body>
     </html>
-  )
+  );
 }
