@@ -18,9 +18,15 @@ type TimeSlot = {
 
 export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
   const { language } = useLanguage();
+  const [step, setStep] = useState<'calendar' | 'details'>('calendar');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [currentWeek, setCurrentWeek] = useState(new Date());
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
 
   const modalVariants = {
     hidden: { opacity: 0, scale: 0.95 },
@@ -118,8 +124,15 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
     setCurrentWeek(newDate);
   };
 
-  const handleSubmit = async () => {
+  const handleContinue = () => {
     if (selectedDate && selectedTime) {
+      setStep('details');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedDate && selectedTime && formData.name && formData.email) {
       try {
         const response = await fetch('/api/book-call', {
           method: 'POST',
@@ -127,11 +140,11 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            name: 'Test User', // This will be replaced with actual form data
-            email: 'test@example.com', // This will be replaced with actual form data
-            phone: '', // Optional
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || '',
             preferredDate: `${selectedDate.toISOString().split('T')[0]}T${selectedTime}:00.000Z`,
-            message: `Scheduled time: ${selectedTime}`, // Optional additional information
+            message: `Scheduled time: ${selectedTime}`,
           }),
         });
 
@@ -185,87 +198,195 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
               </p>
             </div>
 
-            {/* Calendar Section */}
-            <div className="bg-white/5 rounded-xl p-4 sm:p-6 mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="font-display font-semibold text-white">
-                  {t.calendar.title}
-                </h4>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePrevWeek}
-                    className="p-1 hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-gray-400" />
-                  </button>
-                  <button
-                    onClick={handleNextWeek}
-                    className="p-1 hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <ChevronRight className="w-5 h-5 text-gray-400" />
-                  </button>
-                </div>
-              </div>
+            <AnimatePresence mode="wait">
+              {step === 'calendar' ? (
+                <motion.div
+                  key="calendar"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                >
+                  {/* Calendar Section */}
+                  <div className="bg-white/5 rounded-xl p-4 sm:p-6 mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-display font-semibold text-white">
+                        {t.calendar.title}
+                      </h4>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={handlePrevWeek}
+                          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                        >
+                          <ChevronLeft className="w-5 h-5 text-gray-400" />
+                        </button>
+                        <button
+                          onClick={handleNextWeek}
+                          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                        >
+                          <ChevronRight className="w-5 h-5 text-gray-400" />
+                        </button>
+                      </div>
+                    </div>
 
-              {/* Days of the week */}
-              <div className="grid grid-cols-7 gap-1 mb-2">
-                {t.calendar.days.map((day) => (
-                  <div key={day} className="text-center text-xs text-gray-400">
-                    {day}
+                    {/* Days of the week */}
+                    <div className="grid grid-cols-7 gap-1 mb-2">
+                      {t.calendar.days.map((day) => (
+                        <div key={day} className="text-center text-xs text-gray-400">
+                          {day}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Calendar dates */}
+                    <div className="grid grid-cols-7 gap-1 mb-4">
+                      {weekDates.map((date, idx) => {
+                        const isSelected = selectedDate?.toDateString() === date.toDateString();
+                        const isToday = new Date().toDateString() === date.toDateString();
+                        const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
+
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => !isPast && handleDateClick(date)}
+                            disabled={isPast}
+                            className={cn(
+                              'py-2 rounded-lg text-sm transition-colors relative',
+                              isPast ? 'text-gray-600 cursor-not-allowed' :
+                              isSelected ? 'bg-primary text-white' :
+                              isToday ? 'bg-white/10 text-white' :
+                              'text-gray-300 hover:bg-white/10'
+                            )}
+                          >
+                            {date.getDate()}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Time slots */}
+                    {selectedDate && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {timeSlots.map((slot) => (
+                          <button
+                            key={slot.time}
+                            onClick={() => slot.available && handleTimeClick(slot.time)}
+                            disabled={!slot.available}
+                            className={cn(
+                              'py-2 px-2 rounded-lg text-sm transition-colors',
+                              !slot.available ? 'text-gray-600 cursor-not-allowed' :
+                              selectedTime === slot.time ? 'bg-primary text-white' :
+                              'text-gray-300 hover:bg-white/10'
+                            )}
+                          >
+                            {slot.time}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
 
-              {/* Calendar dates */}
-              <div className="grid grid-cols-7 gap-1 mb-4">
-                {weekDates.map((date, idx) => {
-                  const isSelected = selectedDate?.toDateString() === date.toDateString();
-                  const isToday = new Date().toDateString() === date.toDateString();
-                  const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
+                  {/* Continue Button */}
+                  <button
+                    onClick={handleContinue}
+                    disabled={!selectedDate || !selectedTime}
+                    className={cn(
+                      'w-full mt-6 py-3 rounded-xl font-semibold transition-colors',
+                      selectedDate && selectedTime
+                        ? 'bg-primary text-white hover:bg-primary-light'
+                        : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                    )}
+                  >
+                    {language === 'en' ? 'Continue' : 'Continuar'}
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="details"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Form fields */}
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-semibold">
+                        {language === 'en' ? 'Your name' : 'Tu nombre'} *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full bg-white/10 border-2 border-primary/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all"
+                        placeholder={language === 'en' ? 'John Smith' : 'Juan Pérez'}
+                      />
+                    </div>
 
-                  return (
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-semibold">
+                        {language === 'en' ? 'Email' : 'Correo electrónico'} *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full bg-white/10 border-2 border-primary/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all"
+                        placeholder={language === 'en' ? 'john@example.com' : 'juan@ejemplo.com'}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-semibold">
+                        {language === 'en' ? 'Phone (optional)' : 'Teléfono (opcional)'}
+                      </label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full bg-white/10 border-2 border-primary/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:border-primary/60 focus:outline-none transition-all"
+                        placeholder={language === 'en' ? '+1 555-123-4567' : '+34 612 345 678'}
+                      />
+                    </div>
+
+                    {/* Selected date display */}
+                    <div className="bg-white/5 rounded-xl p-4 text-center">
+                      <p className="text-gray-400 text-sm">
+                        {language === 'en' ? 'Selected time:' : 'Hora seleccionada:'}
+                      </p>
+                      <p className="text-white font-semibold">
+                        {selectedDate?.toLocaleDateString(language === 'en' ? 'en-US' : 'es-ES', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })} - {selectedTime}
+                      </p>
+                    </div>
+
+                    {/* Submit button */}
                     <button
-                      key={idx}
-                      onClick={() => !isPast && handleDateClick(date)}
-                      disabled={isPast}
-                      className={cn(
-                        'py-2 rounded-lg text-sm transition-colors relative',
-                        isPast ? 'text-gray-600 cursor-not-allowed' :
-                        isSelected ? 'bg-primary text-white' :
-                        isToday ? 'bg-white/10 text-white' :
-                        'text-gray-300 hover:bg-white/10'
-                      )}
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary-light text-white font-semibold py-3 rounded-xl transition-colors mt-6"
                     >
-                      {date.getDate()}
+                      {t.cta}
                     </button>
-                  );
-                })}
-              </div>
 
-              {/* Time slots */}
-              {selectedDate && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {timeSlots.map((slot) => (
+                    {/* Back button */}
                     <button
-                      key={slot.time}
-                      onClick={() => slot.available && handleTimeClick(slot.time)}
-                      disabled={!slot.available}
-                      className={cn(
-                        'py-2 px-2 rounded-lg text-sm transition-colors',
-                        !slot.available ? 'text-gray-600 cursor-not-allowed' :
-                        selectedTime === slot.time ? 'bg-primary text-white' :
-                        'text-gray-300 hover:bg-white/10'
-                      )}
+                      type="button"
+                      onClick={() => setStep('calendar')}
+                      className="w-full bg-transparent hover:bg-white/10 text-white font-semibold py-3 rounded-xl transition-colors"
                     >
-                      {slot.time}
+                      {language === 'en' ? 'Back' : 'Volver'}
                     </button>
-                  ))}
-                </div>
+                  </form>
+                </motion.div>
               )}
-            </div>
+            </AnimatePresence>
 
             {/* Features */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-gray-400">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-gray-400 mt-6">
               {t.features.map((feature, index) => (
                 <Fragment key={index}>
                   {index > 0 && <span>•</span>}
@@ -276,20 +397,6 @@ export default function BookCallModal({ isOpen, onClose }: BookCallModalProps) {
                 </Fragment>
               ))}
             </div>
-
-            {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              disabled={!selectedDate || !selectedTime}
-              className={cn(
-                'w-full mt-6 py-3 rounded-xl font-semibold transition-colors',
-                selectedDate && selectedTime
-                  ? 'bg-primary text-white hover:bg-primary-light'
-                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              )}
-            >
-              {t.cta}
-            </button>
           </motion.div>
         </div>
       )}
