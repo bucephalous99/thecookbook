@@ -1,20 +1,21 @@
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { EB_Garamond, Montserrat } from 'next/font/google';
 import { SearchProvider } from './context/SearchContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { Toaster } from 'sonner';
 import './globals.css';
 
-const inter = Inter({
+const garamond = EB_Garamond({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-garamond',
   weight: ['400', '500', '600', '700'],
 });
 
-const spaceGrotesk = Space_Grotesk({
+// Using Montserrat as Futura alternative (geometric sans-serif)
+const futura = Montserrat({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-space-grotesk',
+  variable: '--font-futura',
   weight: ['500', '600', '700'],
 });
 
@@ -42,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable}`}
+      className={`${garamond.variable} ${futura.variable}`}
     >
       <head>
         <script
@@ -58,7 +59,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-slate-900 text-white font-sans">
+      <body className="min-h-screen bg-[#4B3F3A] text-[#F9F7F4] font-sans">
         <Toaster
           position="top-center"
           expand={false}

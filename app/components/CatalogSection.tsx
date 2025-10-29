@@ -1,6 +1,6 @@
 'use client';
 
-import { Bot, MessageCircle, Zap, TrendingUp, Shield, Sparkles, ArrowRight } from 'lucide-react';
+import { Bot, MessageCircle, Zap, TrendingUp, Shield, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function CatalogSection({ onOpenForm }: { onOpenForm: (source: string) => void }) {
@@ -222,48 +222,16 @@ export default function CatalogSection({ onOpenForm }: { onOpenForm: (source: st
                   </p>
 
                   {/* Stats badge */}
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-gray-200 border border-white/20 mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-gray-200 border border-white/20">
                     <TrendingUp className="w-4 h-4 text-green-400" />
                     <span>{service.stats}</span>
                   </div>
-
-                  {/* CTA Button */}
-                  <button
-                    onClick={() => onOpenForm(`catalog-${service.title}`)}
-                    className={`
-                      w-full flex items-center justify-center gap-2
-                      py-3 px-6
-                      bg-white/10 hover:bg-white/20
-                      backdrop-blur-sm
-                      border border-white/30
-                      rounded-xl
-                      text-white font-semibold
-                      transition-all duration-300
-                      group-hover:translate-x-1
-                    `}
-                  >
-                    {language === 'en' ? 'I Want This' : 'Quiero Esto'}
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="text-gray-400 mb-6 text-lg">
-            {t.customCta.text}
-          </p>
-          <button
-            onClick={() => onOpenForm('catalog-custom')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]"
-          >
-            <Sparkles className="w-5 h-5" />
-            {t.customCta.button}
-          </button>
-        </div>
       </div>
     </section>
   );

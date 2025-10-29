@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    /* Fluid typography base - scales from 14px at 320px to 16px at 1920px */
+    font-size: clamp(0.875rem, 0.8125rem + 0.1953vw, 1rem);
+  }
+
+  h1 {
+    /* Scales from 28px to 48px */
+    font-size: clamp(1.75rem, 1.25rem + 2.5vw, 3rem);
+    line-height: 1.2;
+  }
+
+  h2 {
+    /* Scales from 24px to 36px */
+    font-size: clamp(1.5rem, 1.125rem + 1.875vw, 2.25rem);
+    line-height: 1.3;
+  }
+
+  h3 {
+    /* Scales from 20px to 28px */
+    font-size: clamp(1.25rem, 1rem + 1.25vw, 1.75rem);
+    line-height: 1.4;
+  }
+
+  h4 {
+    /* Scales from 18px to 24px */
+    font-size: clamp(1.125rem, 0.9375rem + 0.9375vw, 1.5rem);
+    line-height: 1.4;
+  }
+
+  h5 {
+    /* Scales from 16px to 20px */
+    font-size: clamp(1rem, 0.875rem + 0.625vw, 1.25rem);
+    line-height: 1.5;
+  }
+
+  h6 {
+    /* Scales from 14px to 18px */
+    font-size: clamp(0.875rem, 0.75rem + 0.625vw, 1.125rem);
+    line-height: 1.5;
+  }
+
+  p, li, span {
+    /* Inherits from html base with slight adjustment */
+    font-size: clamp(0.875rem, 0.8125rem + 0.1953vw, 1rem);
+    line-height: 1.6;
+  }
+}
